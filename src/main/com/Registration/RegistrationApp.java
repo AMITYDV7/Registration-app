@@ -21,26 +21,26 @@ public class RegistrationApp extends HttpServlet {
         String passwrd = req.getParameter("password");
         PrintWriter pw = resp.getWriter();
 
-       // jdbc:mysql://localhost:3306/?user=root
+
         String url;
         url= "jdbc:mysql://localhost:3306/clients";
 
         String user = "root";
         String password = "Amit@2003";
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        try { // adding try catch block
+            Class.forName("com.mysql.cj.jdbc.Driver"); //load the driver
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        try {Connection con = DriverManager.getConnection(url, user, password);
+        try {Connection con = DriverManager.getConnection(url, user, password); // Step 2 create a connection by giving these parameters
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1,name);
+            ps.setString(1,name);// these are the values that are inserted to my database
             ps.setString(2,email);
             ps.setString(3,passwrd);
 
-         int rowAffected = ps.executeUpdate();
+         int rowAffected = ps.executeUpdate();// it will give us output that how many row are affected
 
          if(rowAffected >0){
              pw.println("<h1>Successful store your info :)</h1>");
@@ -48,6 +48,8 @@ public class RegistrationApp extends HttpServlet {
          else{
              pw.println("<h1>Try again</h1>");
          }
+         ps.close(); // close the PreparedStatement
+         con.close(); // close the connection
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
